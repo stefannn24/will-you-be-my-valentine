@@ -1,32 +1,35 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 export const getCupidHint = async (context: string, userQuery?: string): Promise<string> => {
   try {
-    const model = "gemini-3-flash-preview";
-    
-    const systemPrompt = `
-      Ești Cupidon, zeul iubirii. Ești asistentul virtual într-un joc de Treasure Hunt de Valentine's Day.
-      Răspunde-i utilizatoarei (iubita creatorului) într-un mod dulce, jucăuș și romantic.
-      Trebuie să o ajuți să treacă de nivel, dar NU îi spune răspunsul direct. Dă-i un indiciu subtil.
-      Vorbește în limba română. Folosește emoji-uri ❤️.
-      Fii scurt și concis (maxim 2 propoziții).
-    `;
-
-    const prompt = `Contextul nivelului curent: ${context}. ${userQuery ? `Întrebarea ei: ${userQuery}` : 'Dă-i un indiciu general.'}`;
-
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const response = await ai.models.generateContent({
-      model: model,
-      contents: prompt,
-      config: {
-        systemInstruction: systemPrompt,
-      }
+      model: 'gemini-3-flash-preview',
+      contents: `You are Cupid, a playful and helpful matchmaking angel. 
+      The user is playing a romantic treasure hunt game for Valentine's Day.
+      
+      Context of current level: ${context}
+      
+      ${userQuery ? `User asks: ${userQuery}` : 'The user is stuck and needs a hint.'}
+      
+      Provide a short, fun, and romantic hint. Keep it under 2 sentences. Use emojis.
+      Do not give the answer directly if it's a puzzle, just nudge them.`,
     });
 
-    return response.text || "Dragostea e un mister... încearcă din nou! ❤️";
+    return response.text || "Dragostea e complicată, mai încearcă! (Eroare AI)";
   } catch (error) {
-    console.error("Cupid is sleeping:", error);
-    return "Semnalul către Olimp e slab... urmează-ți inima! ❤️";
+    console.error("Gemini error:", error);
+    // Fallback hints in case of error or missing API key
+    const hints = [
+      "Pe bune, chiar ai nevoie de indiciu? *eyeroll*",
+      "E simplu iubire, mai gândește-te puțin! ❤️",
+      "Eu sunt doar Cupidon, nu Google! 😉",
+      "Răspunsul este în inima ta... și probabil pe ecran.",
+      "Hai că poți! Ești cea mai deșteaptă! 🧠",
+      "Nu-ți spun! Vreau să văd cum te descurci singură 😛",
+      "Încearcă să apeși pe chestii, poate se întâmplă ceva? 🤷‍♂️",
+      "Semnalul către Olimp e slab... descurcă-te! 🏹"
+    ];
+    return hints[Math.floor(Math.random() * hints.length)];
   }
 };

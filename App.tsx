@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { HashRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Lock, Unlock, Image as ImageIcon, Music, Volume2, VolumeX } from 'lucide-react';
 
@@ -16,12 +15,16 @@ const MusicPlayer = () => {
     // Attempt auto-play with low volume
     if (audioRef.current) {
       audioRef.current.volume = 0.3;
-      audioRef.current.play().then(() => {
-        setIsPlaying(true);
-      }).catch(err => {
-        console.log("Autoplay blocked, user interaction required:", err);
-        setIsPlaying(false);
-      });
+      const playPromise = audioRef.current.play();
+      
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          setIsPlaying(true);
+        }).catch(err => {
+          console.log("Autoplay blocked, user interaction required:", err);
+          setIsPlaying(false);
+        });
+      }
     }
   }, []);
 
@@ -41,7 +44,7 @@ const MusicPlayer = () => {
       <audio 
         ref={audioRef} 
         loop 
-        src="https://upload.wikimedia.org/wikipedia/commons/3/34/Satie_-_Gymnopedie_No_1.ogg" 
+        src="https://archive.org/download/GymnopedieNo1/GymnopedieNo1.mp3" 
       />
       <motion.button
         whileHover={{ scale: 1.1 }}
@@ -437,73 +440,53 @@ const Gallery = () => {
 };
 
 // --- Main App Component ---
-const MainApp = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+const App = () => {
+  const [gameState, setGameState] = useState<GameState>(GameState.WELCOME);
 
-  // Simple state machine for linear progression, but routes allow direct access if needed
-  const startGame = () => navigate('/quiz');
-  const finishQuiz = () => navigate('/search');
-  const finishSearch = () => navigate('/proposal');
-  const sayYes = () => {
-    // Confetti effect logic could go here
-    navigate('/gallery');
-  };
+  const handleStart = () => setGameState(GameState.QUIZ);
+  const handleQuizComplete = () => setGameState(GameState.SEARCH);
+  const handleSearchComplete = () => setGameState(GameState.PROPOSAL);
+  const handleProposalYes = () => setGameState(GameState.GALLERY_LOCKED);
 
   return (
-    <div className="relative min-h-screen">
-      <Background />
-      <FloatingHearts />
-      <MusicPlayer />
-      
-      {/* Navigation for Gallery access */}
-      {location.pathname !== '/' && location.pathname !== '/gallery' && (
-         <button 
-           onClick={() => navigate('/gallery')}
-           className="fixed top-4 right-4 bg-white/50 backdrop-blur p-2 rounded-full text-purple-600 hover:bg-white transition-colors z-50 border border-purple-200"
-           title="Galerie Secretă"
-         >
-           <ImageIcon size={24} />
-         </button>
-      )}
+    <div className="font-sans text-gray-800 antialiased min-h-screen relative overflow-hidden">
+        <Background />
+        <FloatingHearts />
+        <MusicPlayer />
+        
+        <AnimatePresence mode="wait">
+            {gameState === GameState.WELCOME && (
+                <motion.div key="welcome" className="absolute inset-0 overflow-y-auto" exit={{ opacity: 0 }}>
+                    <WelcomeScreen onStart={handleStart} />
+                </motion.div>
+            )}
+            
+            {gameState === GameState.QUIZ && (
+                <motion.div key="quiz" className="absolute inset-0 overflow-y-auto" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <QuizLevel onComplete={handleQuizComplete} />
+                </motion.div>
+            )}
 
-      <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={
-            <motion.div initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}} className="w-full">
-              <WelcomeScreen onStart={startGame} />
-            </motion.div>
-          } />
-          <Route path="/quiz" element={
-            <motion.div initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}} className="w-full">
-              <QuizLevel onComplete={finishQuiz} />
-            </motion.div>
-          } />
-          <Route path="/search" element={
-            <motion.div initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}} className="w-full">
-              <SearchLevel onComplete={finishSearch} />
-            </motion.div>
-          } />
-          <Route path="/proposal" element={
-            <motion.div initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}} className="w-full">
-              <ProposalLevel onYes={sayYes} />
-            </motion.div>
-          } />
-          <Route path="/gallery" element={
-            <motion.div initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}} className="w-full">
-              <Gallery />
-            </motion.div>
-          } />
-        </Routes>
-      </AnimatePresence>
+            {gameState === GameState.SEARCH && (
+                <motion.div key="search" className="absolute inset-0 overflow-hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <SearchLevel onComplete={handleSearchComplete} />
+                </motion.div>
+            )}
+
+            {gameState === GameState.PROPOSAL && (
+                <motion.div key="proposal" className="absolute inset-0 overflow-y-auto" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <ProposalLevel onYes={handleProposalYes} />
+                </motion.div>
+            )}
+
+            {(gameState === GameState.GALLERY_LOCKED || gameState === GameState.GALLERY_OPEN) && (
+                <motion.div key="gallery" className="absolute inset-0 overflow-y-auto" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <Gallery />
+                </motion.div>
+            )}
+        </AnimatePresence>
     </div>
   );
 };
 
-export default function App() {
-  return (
-    <Router>
-      <MainApp />
-    </Router>
-  );
-}
+export default App;
