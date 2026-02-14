@@ -12,6 +12,12 @@ const text2 = "P.S. Sa retii codul, poate semnifica ceva...";
 const letterDuration = 0.05; // Viteza de scriere (secunde per literă)
 const firstTextDuration = text1.length * letterDuration; // Cât durează primul text
 
+const isEmoji = (char: string) => {
+  // Regex simplu: dacă nu e literă românească/engleză, cifră sau punctuație, e probabil emoji
+  const simpleTextRegex = /^[a-zA-Z0-9\s.,?!'":;ăâîșțĂÂÎȘȚ()-]$/;
+  return !simpleTextRegex.test(char);
+};
+
 import pic1 from './src/assets/pic7.jpg';
 import pic2 from './src/assets/pic2.jpg';
 import pic3 from './src/assets/pic3.jpg';
@@ -672,13 +678,15 @@ const WelcomeScreen = ({ onStart }: { onStart: () => void }) => (
         <Heart className="w-20 h-20 text-pink-500 mx-auto mb-4" fill="currentColor" />
       </motion.div>
       <h1 className="text-4xl font-bold text-purple-800 mb-4 fancy-font">Buna iubirel ❤️</h1>
-      <p className="text-lg text-gray-700 mb-6 font-mono">
-  {text1.split("").map((char, index) => (
+      <p className="text-lg text-gray-700 mb-6">
+  {Array.from(text1).map((char, index) => (
     <motion.span
       key={index}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.05, delay: index * 0.05 }}
+      // FIX AICI: Dacă e emoji, folosim font standard (sans), altfel font-mono/fancy
+      className={isEmoji(char) ? "font-sans inline-block" : "font-mono"}
     >
       {char}
     </motion.span>
