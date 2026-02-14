@@ -12,9 +12,10 @@ const text2 = "P.S. Sa retii codul, poate semnifica ceva...";
 const letterDuration = 0.05; // Viteza de scriere (secunde per literă)
 const firstTextDuration = text1.length * letterDuration; // Cât durează primul text
 
+// Verifică dacă un caracter este "special" (emoji)
 const isEmoji = (char: string) => {
-  // Regex simplu: dacă nu e literă românească/engleză, cifră sau punctuație, e probabil emoji
-  const simpleTextRegex = /^[a-zA-Z0-9\s.,?!'":;ăâîșțĂÂÎȘȚ()-]$/;
+  // Regex: Orice NU este literă, cifră sau punctuație simplă este considerat Emoji
+  const simpleTextRegex = /^[a-zA-Z0-9\s.,?!'":;ăâîșțĂÂÎȘȚ()\-]$/;
   return !simpleTextRegex.test(char);
 };
 
@@ -678,31 +679,36 @@ const WelcomeScreen = ({ onStart }: { onStart: () => void }) => (
         <Heart className="w-20 h-20 text-pink-500 mx-auto mb-4" fill="currentColor" />
       </motion.div>
       <h1 className="text-4xl font-bold text-purple-800 mb-4 fancy-font">Buna iubirel ❤️</h1>
-      <p className="text-lg text-gray-700 mb-6">
+      <p className="text-lg text-gray-700 mb-6 font-mono">
   {Array.from(text1).map((char, index) => (
     <motion.span
       key={index}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.05, delay: index * 0.05 }}
-      // FIX AICI: Dacă e emoji, folosim font standard (sans), altfel font-mono/fancy
-      className={isEmoji(char) ? "font-sans inline-block" : "font-mono"}
+      // FIX IOS: Aplicăm fontul Apple Color Emoji direct dacă e caracter special
+      style={{ 
+        fontFamily: isEmoji(char) ? '"Apple Color Emoji", "Segoe UI Emoji", sans-serif' : 'inherit' 
+      }}
     >
       {char}
     </motion.span>
   ))}
 </p>
-      {/* Al doilea Paragraf (P.S.) */}
+
 <p className="text-sm text-purple-600 mb-8 italic font-mono">
-  {text2.split("").map((char, index) => (
+  {Array.from(text2).map((char, index) => (
     <motion.span
       key={index}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{
         duration: 0.05,
-        // Aici e magia: Așteptăm să se termine primul text + indexul curent + 0.5s pauză
         delay: firstTextDuration + (index * letterDuration) + 0.5 
+      }}
+      // FIX IOS AICI
+      style={{ 
+        fontFamily: isEmoji(char) ? '"Apple Color Emoji", "Segoe UI Emoji", sans-serif' : 'inherit' 
       }}
     >
       {char}
@@ -1108,17 +1114,17 @@ const ProposalLevel = ({ onYes }: { onYes: () => void }) => {
 
         {/* --- MODIFICAREA PENTRU TEXT TIP "TYPEWRITER" --- */}
         <h1 className="text-4xl md:text-5xl font-bold text-pink-600 mb-8 fancy-font leading-tight min-h-[60px]">
-          {questionText.split("").map((char, index) => (
-            <motion.span
-              key={index}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{
-                duration: 0.05,
-                // Delay: 0.5 secunde (să apară cardul) + index * viteză
-                delay: 0.5 + (index * 0.05) 
-              }}
-            className={isEmoji(char) ? "font-sans inline-block" : "fancy-font"}
+  {Array.from(questionText).map((char, index) => (
+    <motion.span
+      key={index}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.05, delay: 0.5 + (index * 0.05) }}
+      // FIX IOS AICI: Forțăm fontul de Emoji, altfel moștenește 'fancy-font' care e Pacifico
+      style={{ 
+        fontFamily: isEmoji(char) ? '"Apple Color Emoji", "Segoe UI Emoji", sans-serif' : 'inherit',
+        display: 'inline-block' // Ajută animația pe iOS
+      }}
     >
       {char}
     </motion.span>
