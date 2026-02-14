@@ -12,13 +12,13 @@ const text2 = "P.S. Sa retii codul, poate semnifica ceva...";
 const letterDuration = 0.05; // Viteza de scriere (secunde per literă)
 const firstTextDuration = text1.length * letterDuration; // Cât durează primul text
 
-import pic1 from './src/assets/pic1.jpg';
+import pic1 from './src/assets/pic7.jpg';
 import pic2 from './src/assets/pic2.jpg';
 import pic3 from './src/assets/pic3.jpg';
 import pic4 from './src/assets/pic4.jpg';
 import pic5 from './src/assets/pic5.jpg';
 import pic6 from './src/assets/pic6.jpg';
-import proposalPic from './src/assets/pic7.jpg';
+import proposalPic from './src/assets/pic1.jpg';
 
 // --- CONFIGURATION: IMAGES FROM PUBLIC FOLDER ---
 // Ensure pic1.jpg, pic2.jpg... are in your public folder
@@ -354,8 +354,8 @@ const DateNightJar = () => {
 
   const coupons = [
     "Masaj de relaxare (meriti ca esti regina regeasca)💆‍♀️",
-    "Cină gătită de mine (un sendvisel, doua la domnisoara)🍝",
-    "Seară de film la alegerea ta (oricum tu alegi 🙄) 🎬",
+    "Cină gătită de tine (muehehehehe)🍝",
+    "Seară de film la alegerea ta (oricum tu alegi 🙄)",
     "Mic dejun la pat (eu sunt micul dejun duh)🥐",
     "Excursie de weekend surpriză (eu la tine in pat si tu pe mine) 🚗",
     "Desertul tău preferat, oricând (eu sunt ala) 🍰"
@@ -627,8 +627,8 @@ const LoveLetter = () => {
                  {/* Close Button */}
                  <button 
                     onClick={() => setIsOpen(false)}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors"
-                 >
+                    className="sticky top-2 float-right -mt-4 -mr-4 md:-mr-8 text-gray-400 hover:text-red-500 transition-colors z-50 bg-[#fffdf7]/90 backdrop-blur-md p-2 rounded-full shadow-sm border border-pink-100"
+>
                     <X size={24} />
                  </button>
 
@@ -1181,20 +1181,28 @@ const Gallery = () => {
   if (unlocked) {
     return (
       <div className="min-h-screen p-6 pt-20">
-         <div className="max-w-6xl mx-auto">
-            <h1 className="text-4xl font-bold text-center text-purple-800 mb-8 fancy-font">Amintirile Noastre ❤️</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Using images from public folder list */}
+         {/* --- FIX AICI: Flex column, gap mare și padding jos --- */}
+         <div className="max-w-6xl mx-auto flex flex-col items-center gap-16 pb-32">
+            
+            <h1 className="text-4xl font-bold text-center text-purple-800 fancy-font">
+              Amintirile Noastre ❤️
+            </h1>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
               {GALLERY_IMAGES.map((imgSrc, index) => (
                 <GalleryItem key={index} i={index} imageSrc={imgSrc} />
               ))}
             </div>
             
-            {/* Interactive Letter */}
-            <LoveLetter />
+            {/* Wrapper pentru Scrisoare ca să aibă spațiul ei sigur */}
+            <div className="relative z-20 mt-8">
+               <LoveLetter />
+            </div>
 
-            {/* Date Night Jar */}
-            <DateNightJar />
+            {/* Wrapper pentru Borcan */}
+            <div className="relative z-10">
+               <DateNightJar />
+            </div>
 
          </div>
       </div>
