@@ -312,7 +312,8 @@ const GalleryItem: React.FC<{ i: number, imageSrc: string }> = ({ i, imageSrc })
       transition={{ delay: i * 0.1 }}
       className="bg-white p-3 rounded-2xl shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-300"
     >
-      <div className="w-full h-64 overflow-hidden rounded-xl bg-gray-100 relative">
+      {/* Am schimbat bg-gray-100 cu bg-black/5 pentru un fundal mai subtil în spatele pozelor */}
+      <div className="w-full h-64 overflow-hidden rounded-xl bg-black/5 relative flex items-center justify-center">
         <motion.img 
           src={imageSrc} 
           alt={`Moment ${i}`}
@@ -323,7 +324,9 @@ const GalleryItem: React.FC<{ i: number, imageSrc: string }> = ({ i, imageSrc })
             opacity: isLoaded ? 1 : 0 
           }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="w-full h-full object-cover"
+          // --- MODIFICAREA PRINCIPALĂ AICI ---
+          // 'object-contain' = Arată toată poza, nu o taie
+          className="w-full h-full object-contain"
         />
         {!isLoaded && (
            <div className="absolute inset-0 flex items-center justify-center">
