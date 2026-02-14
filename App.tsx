@@ -12,13 +12,13 @@ const text2 = "P.S. Sa retii codul, poate semnifica ceva...";
 const letterDuration = 0.05; // Viteza de scriere (secunde per literă)
 const firstTextDuration = text1.length * letterDuration; // Cât durează primul text
 
-import pic1 from './assets/pic1.jpg';
-import pic2 from './assets/pic2.jpg';
-import pic3 from './assets/pic3.jpg';
-import pic4 from './assets/pic4.jpg';
-import pic5 from './assets/pic5.jpg';
-import pic6 from './assets/pic6.jpg';
-import proposalPic from './assets/pic7.jpg';
+import pic1 from './src/assets/pic1.jpg';
+import pic2 from './src/assets/pic2.jpg';
+import pic3 from './src/assets/pic3.jpg';
+import pic4 from './src/assets/pic4.jpg';
+import pic5 from './src/assets/pic5.jpg';
+import pic6 from './src/assets/pic6.jpg';
+import proposalPic from './src/assets/pic7.jpg';
 
 // --- CONFIGURATION: IMAGES FROM PUBLIC FOLDER ---
 // Ensure pic1.jpg, pic2.jpg... are in your public folder
