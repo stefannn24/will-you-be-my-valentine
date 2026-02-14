@@ -686,16 +686,17 @@ const WelcomeScreen = ({ onStart }: { onStart: () => void }) => (
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.05, delay: index * 0.05 }}
-      // FIX IOS: Aplicăm fontul Apple Color Emoji direct dacă e caracter special
       style={{ 
         fontFamily: isEmoji(char) ? '"Apple Color Emoji", "Segoe UI Emoji", sans-serif' : 'inherit' 
       }}
     >
-      {char}
+      {/* FIX AICI: Dacă e spațiu, pune \u00A0, altfel pune litera */}
+      {char === " " ? "\u00A0" : char}
     </motion.span>
   ))}
 </p>
 
+{/* Paragraful 2 (P.S.) */}
 <p className="text-sm text-purple-600 mb-8 italic font-mono">
   {Array.from(text2).map((char, index) => (
     <motion.span
@@ -706,12 +707,12 @@ const WelcomeScreen = ({ onStart }: { onStart: () => void }) => (
         duration: 0.05,
         delay: firstTextDuration + (index * letterDuration) + 0.5 
       }}
-      // FIX IOS AICI
       style={{ 
         fontFamily: isEmoji(char) ? '"Apple Color Emoji", "Segoe UI Emoji", sans-serif' : 'inherit' 
       }}
     >
-      {char}
+      {/* FIX AICI */}
+      {char === " " ? "\u00A0" : char}
     </motion.span>
   ))}
 </p>
@@ -1120,13 +1121,13 @@ const ProposalLevel = ({ onYes }: { onYes: () => void }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.05, delay: 0.5 + (index * 0.05) }}
-      // FIX IOS AICI: Forțăm fontul de Emoji, altfel moștenește 'fancy-font' care e Pacifico
       style={{ 
         fontFamily: isEmoji(char) ? '"Apple Color Emoji", "Segoe UI Emoji", sans-serif' : 'inherit',
-        display: 'inline-block' // Ajută animația pe iOS
+        display: 'inline-block' 
       }}
     >
-      {char}
+      {/* FIX AICI */}
+      {char === " " ? "\u00A0" : char}
     </motion.span>
   ))}
 </h1>
