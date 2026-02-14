@@ -12,19 +12,27 @@ const text2 = "P.S. Sa retii codul, poate semnifica ceva...";
 const letterDuration = 0.05; // Viteza de scriere (secunde per literă)
 const firstTextDuration = text1.length * letterDuration; // Cât durează primul text
 
+import pic1 from './assets/pic1.jpg';
+import pic2 from './assets/pic2.jpg';
+import pic3 from './assets/pic3.jpg';
+import pic4 from './assets/pic4.jpg';
+import pic5 from './assets/pic5.jpg';
+import pic6 from './assets/pic6.jpg';
+import proposalPic from './assets/pic7.jpg';
+
 // --- CONFIGURATION: IMAGES FROM PUBLIC FOLDER ---
 // Ensure pic1.jpg, pic2.jpg... are in your public folder
 const GALLERY_IMAGES = [
-  "/pic7.jpg",
-  "/pic2.jpg",
-  "/pic3.jpg",
-  "/pic4.jpg",
-  "/pic5.jpg",
-  "/pic6.jpg",
+  pic1,
+  pic2,
+  pic3,
+  pic4,
+  pic5,
+  pic6,
 ];
 
 // Ensure proposal.jpg is in your public folder
-const PROPOSAL_IMAGE = "/pic1.jpg";
+const PROPOSAL_IMAGE = proposalPic;
 
 
 // --- Global Click Sparkles Component ---
