@@ -994,7 +994,6 @@ const SearchLevel = ({ onComplete }: { onComplete: () => void }) => {
 };
 
 // --- Proposal Level ---
-// --- Proposal Level ---
 const ProposalLevel = ({ onYes }: { onYes: () => void }) => {
   const [noBtnState, setNoBtnState] = useState<{
     moved: boolean;
@@ -1119,11 +1118,12 @@ const ProposalLevel = ({ onYes }: { onYes: () => void }) => {
                 // Delay: 0.5 secunde (să apară cardul) + index * viteză
                 delay: 0.5 + (index * 0.05) 
               }}
-            >
-              {char}
-            </motion.span>
-          ))}
-        </h1>
+            className={isEmoji(char) ? "font-sans inline-block" : "fancy-font"}
+    >
+      {char}
+    </motion.span>
+  ))}
+</h1>
         {/* ------------------------------------------------ */}
         
         <div className="flex flex-col md:flex-row gap-8 justify-center items-center relative z-10 mt-8 w-full min-h-[100px]">
