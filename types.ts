@@ -11,7 +11,7 @@ export interface QuizQuestion {
   id: number;
   question: string;
   options: string[];
-  correctAnswer: number; // Index
+  correctAnswer: number | number[]; // Index
   hintContext: string; // Context for Gemini
 }
 
